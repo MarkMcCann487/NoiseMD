@@ -1,23 +1,23 @@
 Installation
 ============
 
-**my-package** supports Python >= 3.8.
+**NoiseMD** supports Python >= 3.8.
 
 ## Installing with `pip`
 
-**my-package** is available [on PyPI](https://pypi.org/project/my-package/). Just run
+**NoiseMD** is available [on PyPI](https://pypi.org/project/NoiseMD/). Just run
 
 ```bash
-pip install my-package
+pip install NoiseMD
 ```
 
 ## Installing from source
 
-To install **my-package** from source, first clone [the repository](https://github.com/allenai/python-package-template):
+To install **NoiseMD** from source, first clone [the repository](https://github.com/MarkMcCann487/NoiseMD):
 
 ```bash
-git clone https://github.com/allenai/python-package-template.git
-cd python-package-template
+git clone https://github.com/MarkMcCann487/NoiseMD.git
+cd NoiseMD
 ```
 
 Then run
