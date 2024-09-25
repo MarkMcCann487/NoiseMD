@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class NoiseMD : 
     def __init__(self) :
         self.positions = np.zeros(10)
