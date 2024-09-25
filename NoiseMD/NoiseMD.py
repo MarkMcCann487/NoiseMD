@@ -2,7 +2,7 @@ import numpy as np
 
 class NoiseMD : 
     def __init__(self) :
-        self.positions = []
+        self.positions = np.zeros(10)
         self.velocities = []
         self.energy = [] 
         self.attachments = []
