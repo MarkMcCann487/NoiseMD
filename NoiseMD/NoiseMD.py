@@ -15,7 +15,7 @@ class NoiseMD :
         nx = number of replicas of the unit cell in the x direction
         ny = number of replicas of the unit cell in the y direction
         """ 
-        self.positions = ??
+        self.positions = []
         pass
 
     def potential( self ) :
