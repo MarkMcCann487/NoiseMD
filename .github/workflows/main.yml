@@ -140,7 +140,6 @@ jobs:
           python scripts/release_notes.py > ${{ github.workspace }}-RELEASE_NOTES.md
 
       - name: Publish package to PyPI
-        run: |
         uses: pypa/gh-action-pypi-publish@release/v1  
 
       - name: Publish GitHub release
