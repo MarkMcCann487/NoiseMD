@@ -56,9 +56,9 @@ class NoiseMD:
         self.thermo_atoms = []
         self.force_atoms = []
         for i in range(len(statlist)) : 
-            if statlist[i]>=0 : self.moving_atoms.append(i) 
-            if statlist[i]==0 : self.thermo_atoms.append(i)
-            if statlist[i]>0 : self.force_atoms.append(i)
+            if statlist[i]>=0 : self.moving_atoms.append(int(i)) 
+            if statlist[i]==0 : self.thermo_atoms.append(int(i))
+            if statlist[i]>0 : self.force_atoms.append(int(i))
 
     def Kinet(self) :
         v2 = np.square(self.velocities)
@@ -69,17 +69,17 @@ class NoiseMD:
 
         init_positions = self.positions
         for step in range(nsteps) :
-            therm = 0
+            self.therm = 0
             therm1 = np.exp(-0.5*self.tstep*self.friction)
             therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
             if self.friction>0 : 
                 # Do thermostat step 
                 
-                therm = therm + Kinet()
+                self.therm = self.therm + self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                therm = therm + Kinet()
+                self.therm = self.therm + self.Kinet()
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
@@ -92,9 +92,9 @@ class NoiseMD:
             pe, forces = potential(self.positions)
 
             # Add your non conservative force
-            for j in self.force_atoms : 
+           ''' for j in self.force_atoms : 
                 forces[j][0] += 
-                forces[j][1] += 
+                forces[j][1] += '''
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
@@ -103,11 +103,11 @@ class NoiseMD:
 
             if self.friction>0 : 
                 # Do thermostat step
-                therm = therm + Kinet()
+                self.therm = self.therm + self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                therm = therm + Kinet()
+                self.therm = self.therm + self.Kinet()
 
     def get_positions(self):
         return self.positions
