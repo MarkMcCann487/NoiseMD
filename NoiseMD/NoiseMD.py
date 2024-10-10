@@ -63,7 +63,7 @@ class NoiseMD:
     def Kinet(self) :
         v2 = np.square(self.velocities)
         total_vel = np.sum(v2)
-        self.kinetic = 0.5*total_vel
+        return 0.5*total_vel
 
     def runMD(self, nsteps):
 
