@@ -47,7 +47,7 @@ class NoiseMD:
     def set_initial_velocities( self, temp ) : 
         # code for setting initial velocities
         self.velocities = np.zeros( self.positions.shape )
-        for i in range(self.velocities):
+        for i in range(self.velocities.shape[0]):
             self.velocities[i,0] += np.sqrt(temp)*np.random.normal()
             self.velocities[i,1] += np.sqrt(temp)*np.random.normal()
 
