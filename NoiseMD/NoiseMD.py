@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.stats 
+import matplotlib.pyplot as plt
 
 
 class NoiseMD:
@@ -10,13 +11,6 @@ class NoiseMD:
         self.attachments = []
 
     def create_initial_positions(self, nx, ny):
-        """
-        This function generates an initial 2D structure which has the atoms on a 2D FCC lattice
-
-        Input arguments:
-        nx = number of replicas of the unit cell in the x direction
-        ny = number of replicas of the unit cell in the y direction
-        """
         a = (2**(2/3))
         self.natoms = 2*nx*ny
         self.positions = np.zeros([self.natoms,2])
@@ -31,11 +25,19 @@ class NoiseMD:
                 k+=2
 
     def potential(self):
-        """
-        Returns:
-        ???
-        """
-        pass
+        self.forces = np.zeros(self.positions.shape)
+        for i in range(1, self.natoms) :
+            for j in range(i) :
+                r2 = (self.positions[i,0] - self.positions[j,0])
+                r6 = r2*r2*r2
+                r12 = r6*r6
+                self.potent = 4*((1/r12)-(1/r6))
+
+                self.forces[i][0] += 4*(self.positions[i,0] - self.positions[j,0])*((1/r12)-(1/r6))
+                self.forces[i][1] += 4*(self.positions[i,1] - self.positions[j,1])*((1/r12)-(1/r6))
+                self.forces[j][0] += -4*(self.positions[i,0] - self.positions[j,0])*((1/r12)-(1/r6))
+                self.forces[j][1] += -4*(self.positions[i,0] - self.positions[j,0])*((1/r12)-(1/r6))
+
 
     def set_params( self, tstep, temp, friction ) : 
         self.tstep = tstep
@@ -45,32 +47,49 @@ class NoiseMD:
     def set_initial_velocities( self, temp ) : 
         # code for setting initial velocities
         self.velocities = np.zeros( self.positions.shape )
+        for i in range(self.velocities):
+            self.velocities[i,0] += np.sqrt(temp)*np.random.normal()
+            self.velocities[i,1] += np.sqrt(temp)*np.random.normal()
 
     def set_moving_atoms( self, statlist ) :
         self.moving_atoms = []
-        self.themo_atoms = []
+        self.thermo_atoms = []
         self.force_atoms = []
         for i in range(len(statlist)) : 
             if statlist[i]>=0 : self.moving_atoms.append(i) 
             if statlist[i]==0 : self.thermo_atoms.append(i)
             if statlist[i]>0 : self.force_atoms.append(i)
 
+    def Kinet(self) :
+        v2 = np.square(self.velocities)
+        total_vel = np.sum(v2)
+        self.kinetic = 0.5*total_vel
+
     def runMD(self, nsteps):
-        """ """
+
+        init_positions = self.positions
         for step in range(nsteps) :
-            if friction>0 : 
+            therm = 0
+            therm1 = np.exp(-0.5*self.tstep*self.friction)
+            therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
+            if self.friction>0 : 
                 # Do thermostat step 
+                
+                therm = therm + Kinet()
                 for j in self.thermo_atoms : 
+                    self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
+                    self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
+                therm = therm + Kinet()
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
-                velocities[j,0] = velocities[j,0] + 0.5*forces[j,0]*tstep
-                velocities[j,1] = velocities[j,1] + 0.5*forces[j,1]*tstep
+                self.velocities[j,0] = self.velocities[j,0] + 0.5*self.forces[j,0]*self.tstep
+                self.velocities[j,1] = self.velocities[j,1] + 0.5*self.forces[j,1]*self.tstep
                 # Update position by a full time step
-                positions[j,0]  = positions[j,0] + velocities[j,0]*tstep
-                positions[j,1]  = positions[j,1] + velocities[j,1]*tstep
+                self.positions[j,0]  = self.positions[j,0] + self.velocities[j,0]*self.tstep
+                self.positions[j,1]  = self.positions[j,1] + self.velocities[j,1]*self.tstep
             # Calculate the new energy and forces
-            pe, forces = potential (positions)
+            pe, forces = potential(self.positions)
 
             # Add your non conservative force
             for j in self.force_atoms : 
@@ -79,12 +98,16 @@ class NoiseMD:
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
-                velocities[j,0] = velocities[j,0] + 0.5*forces[j,0]*tstep
-                velocities[j,1] = velocities[j,1] + 0.5*forces[j,1]*tstep
+                self.velocities[j,0] = self.velocities[j,0] + 0.5*forces[j,0]*self.tstep
+                self.velocities[j,1] = self.velocities[j,1] + 0.5*forces[j,1]*self.tstep
 
-            if friction>0 : 
+            if self.friction>0 : 
                 # Do thermostat step
+                therm = therm + Kinet()
                 for j in self.thermo_atoms : 
+                    self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
+                    self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
+                therm = therm + Kinet()
 
     def get_positions(self):
         return self.positions
