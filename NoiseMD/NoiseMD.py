@@ -115,7 +115,7 @@ class NoiseMD:
                 self.therm = self.therm + self.Kinet()
 
             for i in range(len(self.methods)) :
-                if step%self.strides[i]==0 : self.methods(self)
+                if step%self.strides[i]==0 : self.methods[i](self)
 
     def get_positions(self):
         return self.positions
