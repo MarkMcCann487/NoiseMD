@@ -89,7 +89,7 @@ class NoiseMD:
                 self.positions[j,0]  = self.positions[j,0] + self.velocities[j,0]*self.tstep
                 self.positions[j,1]  = self.positions[j,1] + self.velocities[j,1]*self.tstep
             # Calculate the new energy and forces
-            pe, forces = potential(self.positions)
+            self.potential()
 
             # Add your non conservative force
             #for j in self.force_atoms : 
