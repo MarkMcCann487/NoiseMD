@@ -98,8 +98,8 @@ class NoiseMD:
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
-                self.velocities[j,0] = self.velocities[j,0] + 0.5*forces[j,0]*self.tstep
-                self.velocities[j,1] = self.velocities[j,1] + 0.5*forces[j,1]*self.tstep
+                self.velocities[j,0] = self.velocities[j,0] + 0.5*self.forces[j,0]*self.tstep
+                self.velocities[j,1] = self.velocities[j,1] + 0.5*self.forces[j,1]*self.tstep
 
             if self.friction>0 : 
                 # Do thermostat step
