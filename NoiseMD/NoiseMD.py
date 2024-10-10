@@ -8,7 +8,8 @@ class NoiseMD:
         self.positions = np.zeros(10)
         self.velocities = []
         self.energy = []
-        self.attachments = []
+        self.strides = []
+        self.methods = []
 
     def create_initial_positions(self, nx, ny):
         a = (2**(2/3))
@@ -43,6 +44,10 @@ class NoiseMD:
         self.tstep = tstep
         self.temp = temp
         self.friction = friction
+
+    def attach_method( self, stride, method ) :
+        self.strides.append(stride)
+        self.methods.append(method)
 
     def set_initial_velocities( self, temp ) : 
         # code for setting initial velocities
@@ -108,6 +113,9 @@ class NoiseMD:
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
                 self.therm = self.therm + self.Kinet()
+
+            for i in range(len(self.methods)) :
+                if self.strides[i]%0==0 : self.methods(self)
 
     def get_positions(self):
         return self.positions
