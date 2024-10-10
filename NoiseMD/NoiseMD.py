@@ -66,7 +66,7 @@ class NoiseMD:
         return 0.5*total_vel
 
     def runMD(self, nsteps):
-
+        self.potential()
         init_positions = self.positions
         for step in range(nsteps) :
             self.therm = 0
