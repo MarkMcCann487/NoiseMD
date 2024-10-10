@@ -92,9 +92,9 @@ class NoiseMD:
             pe, forces = potential(self.positions)
 
             # Add your non conservative force
-           ''' for j in self.force_atoms : 
-                forces[j][0] += 
-                forces[j][1] += '''
+            #for j in self.force_atoms : 
+            #    forces[j][0] += 
+            #    forces[j][1] += 
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
