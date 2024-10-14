@@ -24,15 +24,17 @@ class NoiseMD:
                 self.positions[k+1][0] = (0.5+ix)*a
                 self.positions[k+1][1] = (0.5+iy)*a
                 k+=2
+        self.initial_positions = self.positions
 
     def potential(self):
+        self.potent = 0
         self.forces = np.zeros(self.positions.shape)
         for i in range(1, self.natoms) :
             for j in range(i) :
-                r2 = (self.positions[i,0] - self.positions[j,0])
+                r2 = (self.positions[i,0] - self.positions[j,0])**2+(self.positions[i,1] - self.positions[j,1])**2
                 r6 = r2*r2*r2
                 r12 = r6*r6
-                self.potent = 4*((1/r12)-(1/r6))
+                self.potent += 4*((1/r12)-(1/r6))
 
                 self.forces[i][0] += 4*(self.positions[i,0] - self.positions[j,0])*((1/r12)-(1/r6))
                 self.forces[i][1] += 4*(self.positions[i,1] - self.positions[j,1])*((1/r12)-(1/r6))
@@ -60,6 +62,7 @@ class NoiseMD:
         self.moving_atoms = []
         self.thermo_atoms = []
         self.force_atoms = []
+        self.nc_const = statlist.max()
         for i in range(len(statlist)) : 
             if statlist[i]>=0 : self.moving_atoms.append(int(i)) 
             if statlist[i]==0 : self.thermo_atoms.append(int(i))
@@ -72,7 +75,6 @@ class NoiseMD:
 
     def runMD(self, nsteps):
         self.potential()
-        init_positions = self.positions
         for step in range(nsteps) :
             self.therm = 0
             therm1 = np.exp(-0.5*self.tstep*self.friction)
@@ -97,9 +99,9 @@ class NoiseMD:
             self.potential()
 
             # Add your non conservative force
-            #for j in self.force_atoms : 
-            #    forces[j][0] += 
-            #    forces[j][1] += 
+            for j in self.force_atoms : 
+                self.forces[j][0] += -self.nc_const*(self.positions[j][1]-self.initial_positions[j][1])
+                self.forces[j][1] +=  self.nc_const*(self.positions[j][0]-self.initial_positions[j][0])
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
