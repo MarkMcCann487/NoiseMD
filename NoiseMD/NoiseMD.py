@@ -86,7 +86,7 @@ class NoiseMD:
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm = self.therm + self.Kinet()
+                self.therm = self.therm - self.Kinet()
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
@@ -108,13 +108,14 @@ class NoiseMD:
                 self.velocities[j,0] = self.velocities[j,0] + 0.5*self.forces[j,0]*self.tstep
                 self.velocities[j,1] = self.velocities[j,1] + 0.5*self.forces[j,1]*self.tstep
 
+
             if self.friction>0 : 
                 # Do thermostat step
                 self.therm = self.therm + self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm = self.therm + self.Kinet()
+                self.therm = self.therm - self.Kinet()
 
             for i in range(len(self.methods)) :
                 if step%self.strides[i]==0 : self.methods[i](self)
