@@ -35,11 +35,9 @@ class NoiseMD:
                 r6 = r2*r2*r2
                 r12 = r6*r6
                 self.potent += 4*((1/r12)-(1/r6))
- 
-                self.forces[i][0] += 4*(self.positions[i,0] - self.positions[j,0])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[i][1] += 4*(self.positions[i,1] - self.positions[j,1])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[j][0] += -4*(self.positions[i,0] - self.positions[j,0])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[j][1] += -4*(self.positions[i,1] - self.positions[j,1])*((12/(r12*r2))-(6/(r2*r6)))
+
+                self.forces[i,:] += 4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
+                self.forces[j,:] += -4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
 
 
     def set_params( self, tstep, temp, friction ) : 
