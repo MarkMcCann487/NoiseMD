@@ -61,7 +61,6 @@ class NoiseMD:
         self.moving_atoms = []
         self.thermo_atoms = []
         self.force_atoms = []
-        self.nc_const = statlist.max()
         for i in range(len(statlist)) : 
             if statlist[i]>=0 : self.moving_atoms.append(int(i)) 
             if statlist[i]==0 : self.thermo_atoms.append(int(i))
