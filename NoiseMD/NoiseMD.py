@@ -40,10 +40,11 @@ class NoiseMD:
                 self.forces[j,:] += -4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
 
 
-    def set_params( self, tstep, temp, friction ) : 
+    def set_params( self, tstep, temp, friction, nc_const ) : 
         self.tstep = tstep
         self.temp = temp
         self.friction = friction
+        self.nc_const = nc_const
 
     def attach_method( self, stride, method ) :
         self.strides.append(stride)
