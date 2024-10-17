@@ -25,7 +25,7 @@ class NoiseMD:
                 self.positions[k+1][1] = (0.5+iy)*a
                 k+=2
         self.initial_positions = self.positions
-        
+        return self.initial_positions
 
     def potential(self):
         self.potent = 0
@@ -77,18 +77,17 @@ class NoiseMD:
     def runMD(self, nsteps):
         self.potential()
         for step in range(nsteps) :
-            
+            self.therm = 0
+            therm1 = np.exp(-0.5*self.tstep*self.friction)
+            therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
             if self.friction>0 : 
-                self.therm = 0
-                therm1 = np.exp(-0.5*self.tstep*self.friction)
-                therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
                 # Do thermostat step 
                 
-                self.therm = self.therm + self.Kinet()
+                self.therm += self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm = self.therm - self.Kinet()
+                self.therm += -self.Kinet()
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
@@ -113,11 +112,11 @@ class NoiseMD:
 
             if self.friction>0 : 
                 # Do thermostat step
-                self.therm = self.therm + self.Kinet()
+                self.therm += self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm = self.therm - self.Kinet()
+                self.therm += -self.Kinet()
 
             for i in range(len(self.methods)) :
                 if step%self.strides[i]==0 : self.methods[i] = (self)
