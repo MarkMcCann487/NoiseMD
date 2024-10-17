@@ -78,11 +78,11 @@ class NoiseMD:
         self.potential()
         for step in range(nsteps) :
             self.therm = 0
-            therm1 = np.exp(-0.5*self.tstep*self.friction)
-            therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
+                    
             if self.friction>0 : 
                 # Do thermostat step 
-                
+                therm1 = np.exp(-0.5*self.tstep*self.friction)
+                therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
                 self.therm += self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
