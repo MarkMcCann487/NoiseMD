@@ -25,7 +25,6 @@ class NoiseMD:
                 self.positions[k+1][1] = (0.5+iy)*a
                 k+=2
         self.initial_positions = self.positions
-        return self.initial_positions
 
     def potential(self):
         self.potent = 0
@@ -36,11 +35,9 @@ class NoiseMD:
                 r6 = r2*r2*r2
                 r12 = r6*r6
                 self.potent += 4*((1/r12)-(1/r6))
- 
-                self.forces[i][0] += 4*(self.positions[i,0] - self.positions[j,0])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[i][1] += 4*(self.positions[i,1] - self.positions[j,1])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[j][0] += -4*(self.positions[i,0] - self.positions[j,0])*((12/(r12*r2))-(6/(r2*r6)))
-                self.forces[j][1] += -4*(self.positions[i,0] - self.positions[j,0])*((12/(r12*r2))-(6/(r2*r6)))
+
+                self.forces[i,:] += 4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
+                self.forces[j,:] += -4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
 
 
     def set_params( self, tstep, temp, friction ) : 
@@ -78,16 +75,17 @@ class NoiseMD:
         self.potential()
         for step in range(nsteps) :
             self.therm = 0
-                    
-            if self.friction>0 : 
-                # Do thermostat step 
+            if self.friction>0 :
                 therm1 = np.exp(-0.5*self.tstep*self.friction)
                 therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
-                self.therm += self.Kinet()
+            if self.friction>0 : 
+                # Do thermostat step 
+                
+                self.therm = self.therm + self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm += -self.Kinet()
+                self.therm = self.therm - self.Kinet()
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
@@ -112,14 +110,14 @@ class NoiseMD:
 
             if self.friction>0 : 
                 # Do thermostat step
-                self.therm += self.Kinet()
+                self.therm = self.therm + self.Kinet()
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm += -self.Kinet()
+                self.therm = self.therm - self.Kinet()
 
             for i in range(len(self.methods)) :
-                if step%self.strides[i]==0 : self.methods[i] = (self)
+                if step%self.strides[i]==0 : self.methods[i](self)
 
     def get_positions(self):
         return self.positions
