@@ -77,8 +77,7 @@ class NoiseMD:
             self.therm = 0
             if self.friction>0 :
                 therm1 = np.exp(-0.5*self.tstep*self.friction)
-                therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
-            if self.friction>0 : 
+                therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction)))) 
                 # Do thermostat step 
                 
                 self.therm = self.therm + self.Kinet()
