@@ -122,7 +122,7 @@ class NoiseMD:
                 self.progression[1] = self.positions[i][1]
 
             
-            
+            print(self.initial_positions)
             for i in range(len(self.methods)) :
                 if step%self.strides[i]==0 : self.methods[i](self)
                 
