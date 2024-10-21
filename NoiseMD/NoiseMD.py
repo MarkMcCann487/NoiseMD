@@ -99,8 +99,8 @@ class NoiseMD:
 
             # Add your non conservative force
             for j in self.force_atoms : 
-                self.forces[j][0] = -self.nc_const*(self.positions[j][1]-self.initial_positions[j][1])
-                self.forces[j][1] =  self.nc_const*(self.positions[j][0]-self.initial_positions[j][0])
+                self.forces[j][0] += -self.nc_const*(self.positions[j][1]-self.initial_positions[j][1])
+                self.forces[j][1] +=  self.nc_const*(self.positions[j][0]-self.initial_positions[j][0])
 
             # Update velocity by a half time step
             for j in self.moving_atoms :
