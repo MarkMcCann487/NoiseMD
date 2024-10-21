@@ -115,9 +115,15 @@ class NoiseMD:
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
                 self.therm = self.therm - self.Kinet()
-
+        
+            self.progression = np.zeros((nsteps,0))
+            for i in self.force_atoms:
+                self.progression[i,0] =+ self.positions[i,0]
+                self.progression[i,1] =+ self.positions[i,1]
+            
             for i in range(len(self.methods)) :
                 if step%self.strides[i]==0 : self.methods[i](self)
+                
 
     def get_positions(self):
         return self.positions
