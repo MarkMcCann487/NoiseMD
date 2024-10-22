@@ -120,7 +120,7 @@ class NoiseMD:
             for i in self.force_atoms:
                 self.progression[0] = self.positions[i][0]
                 self.progression[1] = self.positions[i][1]
-            print(self.forces)
+            print(self.forces[14,0], self.forces[14,1])
             
             
             for i in range(len(self.methods)) :
