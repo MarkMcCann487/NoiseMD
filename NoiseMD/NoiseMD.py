@@ -53,7 +53,7 @@ class NoiseMD:
     def set_initial_velocities( self, temp ) : 
         # code for setting initial velocities
         self.velocities = np.zeros( self.positions.shape )
-        for i in range(self.velocities.shape[0]):
+        for i in self.moving_atoms:
             self.velocities[i,0] += np.sqrt(temp)*np.random.normal()
             self.velocities[i,1] += np.sqrt(temp)*np.random.normal()
 
@@ -114,13 +114,7 @@ class NoiseMD:
                 for j in self.thermo_atoms : 
                     self.velocities[j,0] = self.velocities[j,0]*therm1 +therm2*np.random.normal()
                     self.velocities[j,1] = self.velocities[j,1]*therm1 +therm2*np.random.normal()
-                self.therm = self.therm - self.Kinet()
-        
-            self.progression = [0,0]
-            for i in self.force_atoms:
-                self.progression[0] = self.positions[i][0]
-                self.progression[1] = self.positions[i][1]
-            print(self.forces[14,0], self.forces[14,1])
+                self.therm = self.therm - self.Kinet()            
             
             
             for i in range(len(self.methods)) :
