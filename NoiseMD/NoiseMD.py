@@ -54,8 +54,12 @@ class NoiseMD:
         # code for setting initial velocities
         self.velocities = np.zeros( self.positions.shape )
         for i in self.moving_atoms:
-            self.velocities[i,0] += np.sqrt(temp)*np.random.normal()
-            self.velocities[i,1] += np.sqrt(temp)*np.random.normal()
+            self.velocities[i,0] = np.sqrt(temp)*np.random.normal()
+            self.velocities[i,1] = np.sqrt(temp)*np.random.normal()
+        for i in self.force_atoms:
+            self.velocities[i,0] = 0
+            self.velocities[i,1] = 0
+
 
     def set_moving_atoms( self, statlist ) :
         self.moving_atoms = []
@@ -77,6 +81,9 @@ class NoiseMD:
         if self.friction>0 :
             therm1 = np.exp(-0.5*self.tstep*self.friction)
             therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
+        for i in self.force_atoms:
+            self.positions[i][0] += 0.02
+            self.positions[i][1] += 0.02
         for step in range(nsteps) :
             if self.friction>0 : 
                 # Do thermostat step 
