@@ -40,11 +40,13 @@ class NoiseMD:
                 self.forces[j,:] += -4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
 
 
-    def set_params( self, tstep, temp, friction, nc_const ) : 
+    def set_params( self, tstep, temp, friction, nc_const, delx, dely ) : 
         self.tstep = tstep
         self.temp = temp
         self.friction = friction
         self.nc_const = nc_const
+        self.delx = delx
+        self.dely = dely
 
     def attach_method( self, stride, method ) :
         self.strides.append(stride)
@@ -82,8 +84,8 @@ class NoiseMD:
             therm1 = np.exp(-0.5*self.tstep*self.friction)
             therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
         for i in self.force_atoms:
-            self.positions[i][0] += 0.02
-            self.positions[i][1] += 0.02
+            self.positions[i][0] += self.delx
+            self.positions[i][1] += self.dely
         for step in range(nsteps) :
             if self.friction>0 : 
                 # Do thermostat step 
