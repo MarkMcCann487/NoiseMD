@@ -24,7 +24,7 @@ class NoiseMD:
                 self.positions[k+1][0] = (0.5+ix)*a
                 self.positions[k+1][1] = (0.5+iy)*a
                 k+=2
-        self.initial_positions = self.positions
+        self.initial_positions = np.copy(self.positions)
 
     def potential(self):
         self.potent = 0
