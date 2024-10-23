@@ -73,11 +73,11 @@ class NoiseMD:
 
     def runMD(self, nsteps):
         self.potential()
-        self.therm = 0
+        self.therm = 0        
+        if self.friction>0 :
+            therm1 = np.exp(-0.5*self.tstep*self.friction)
+            therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
         for step in range(nsteps) :
-            if self.friction>0 :
-                therm1 = np.exp(-0.5*self.tstep*self.friction)
-                therm2 = np.sqrt((self.temp*(1-np.exp(-self.tstep*self.friction))))
             if self.friction>0 : 
                 # Do thermostat step 
                 
