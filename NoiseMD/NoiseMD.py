@@ -78,7 +78,6 @@ class NoiseMD:
         return 0.5*total_vel
 
     def runMD(self, nsteps):
-        self.potential()
         self.therm = 0        
         if self.friction>0 :
             therm1 = np.exp(-0.5*self.tstep*self.friction)
@@ -86,6 +85,7 @@ class NoiseMD:
         for i in self.force_atoms:
             self.positions[i][0] += self.delx
             self.positions[i][1] += self.dely
+        self.potential()
         for step in range(nsteps) :
             if self.friction>0 : 
                 # Do thermostat step 
