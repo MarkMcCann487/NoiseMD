@@ -11,8 +11,7 @@ class NoiseMD:
         self.strides = []
         self.methods = []
 
-    def create_initial_positions(self, nx, ny):
-        a = (2**(2/3))
+    def create_initial_positions(self, nx, ny, a=2**(2/3)):
         self.natoms = 2*nx*ny
         self.positions = np.zeros([self.natoms,2])
 
