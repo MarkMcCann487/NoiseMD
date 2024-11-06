@@ -11,8 +11,7 @@ class NoiseMD:
         self.strides = []
         self.methods = []
 
-    def create_initial_positions(self, nx, ny):
-        a = (2**(2/3))
+    def create_initial_positions(self, nx, ny, a=2**(2/3)):
         self.natoms = 2*nx*ny
         self.positions = np.zeros([self.natoms,2])
 
@@ -38,7 +37,7 @@ class NoiseMD:
 
                 self.forces[i,:] += 4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
                 self.forces[j,:] += -4*(self.positions[i,:] - self.positions[j,:])*((12/(r12*r2))-(6/(r2*r6)))
-        return self.potent
+
 
     def set_params( self, tstep, temp, friction, nc_const, delx, dely ) : 
         self.tstep = tstep
@@ -133,5 +132,4 @@ class NoiseMD:
 
     def get_positions(self):
         return self.positions
-
 
