@@ -79,7 +79,7 @@ class NoiseMD:
     def runMD(self, nsteps):
         self.therm = 0        
         if self.friction>0 :
-            therm1 = np.exp(-*self.tstep*self.friction) # change here
+            therm1 = np.exp(-self.tstep*self.friction) # change here
             therm2 = np.sqrt((self.temp*(1-np.exp(-2*self.tstep*self.friction)))) # change here
         for i in self.force_atoms:
             self.positions[i][0] += self.delx
